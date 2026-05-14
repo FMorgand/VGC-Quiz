@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { doc, getDoc, setDoc, increment, onSnapshot } from 'firebase/firestore'
+import { doc, getDoc, setDoc, updateDoc, increment, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase'
 
 const PLAYED_PREFIX = 'pokequiz_played_'
@@ -61,11 +61,20 @@ export function useVotes(today, pseudo) {
 
     try {
       const ref = doc(db, 'votes', today)
+
+      // updateDoc handles dot-notation as nested field paths (setDoc merge does not)
       const updates = { total: increment(1) }
       chosenIds.forEach((id) => {
         updates[`zones.${id}`] = increment(1)
       })
-      await setDoc(ref, updates, { merge: true })
+      try {
+        await updateDoc(ref, updates)
+      } catch {
+        // Document doesn't exist yet — create it with proper nested structure
+        const zones = {}
+        chosenIds.forEach((id) => { zones[String(id)] = 1 })
+        await setDoc(ref, { total: 1, zones })
+      }
 
       const playerRef = doc(db, 'players', pseudo)
       const playerSnap = await getDoc(playerRef)
