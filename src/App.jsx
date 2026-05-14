@@ -5,7 +5,7 @@ import { useVotes } from './hooks/useVotes'
 import PseudoSetup from './components/PseudoSetup'
 import QuizImage from './components/QuizImage'
 import ResultScreen from './components/ResultScreen'
-import Leaderboard from './components/Leaderboard'
+import StatsPage from './components/StatsPage'
 import './index.css'
 
 export default function App() {
@@ -13,7 +13,7 @@ export default function App() {
   const { today, quiz } = useQuiz()
   const { votes, totalPlayers, compositions, hasPlayed, savedChosenIds, firebaseError, submitVote } = useVotes(today, pseudo)
   const [chosenIds, setChosenIds] = useState(null)
-  const [view, setView] = useState('quiz') // 'quiz' | 'leaderboard'
+  const [view, setView] = useState('quiz') // 'quiz' | 'stats'
 
   const displayedChosenIds = chosenIds ?? savedChosenIds ?? []
 
@@ -50,10 +50,10 @@ export default function App() {
             Quiz
           </button>
           <button
-            className={`nav-btn ${view === 'leaderboard' ? 'nav-btn--active' : ''}`}
-            onClick={() => setView('leaderboard')}
+            className={`nav-btn ${view === 'stats' ? 'nav-btn--active' : ''}`}
+            onClick={() => setView('stats')}
           >
-            Classement
+            Stats
           </button>
         </div>
       </header>
@@ -66,8 +66,13 @@ export default function App() {
               : 'Impossible d\'enregistrer votre vote (Firestore inaccessible). Vérifiez les règles Firestore.'}
           </div>
         )}
-        {view === 'leaderboard' ? (
-          <Leaderboard currentPseudo={pseudo} />
+        {view === 'stats' ? (
+          <StatsPage
+            quiz={quiz}
+            votes={votes}
+            compositions={compositions}
+            totalPlayers={totalPlayers}
+          />
         ) : showResults ? (
           <>
             <ResultScreen
@@ -78,8 +83,8 @@ export default function App() {
               chosenIds={displayedChosenIds}
             />
             <div className="result-actions">
-              <button className="nav-btn" onClick={() => setView('leaderboard')}>
-                Voir le classement
+              <button className="nav-btn" onClick={() => setView('stats')}>
+                Voir les stats
               </button>
             </div>
           </>
