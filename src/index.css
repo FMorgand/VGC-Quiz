@@ -332,6 +332,19 @@ main {
 .leaderboard th { color: var(--text-muted); font-weight: 500; }
 .leaderboard .row--me td { color: var(--accent); font-weight: 600; }
 
+/* ── Firebase error banner ─────────────────────── */
+.firebase-error {
+  width: 100%;
+  max-width: 720px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid var(--red);
+  color: var(--red);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
 /* ── Misc ──────────────────────────────────────── */
 .loading, .no-quiz {
   text-align: center;

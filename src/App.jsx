@@ -11,7 +11,7 @@ import './index.css'
 export default function App() {
   const { pseudo, setPseudo } = usePlayer()
   const { today, quiz } = useQuiz()
-  const { votes, totalPlayers, hasPlayed, savedChosenIds, submitVote } = useVotes(today, pseudo)
+  const { votes, totalPlayers, hasPlayed, savedChosenIds, firebaseError, submitVote } = useVotes(today, pseudo)
   const [chosenIds, setChosenIds] = useState(null)
   const [view, setView] = useState('quiz') // 'quiz' | 'leaderboard'
 
@@ -59,6 +59,13 @@ export default function App() {
       </header>
 
       <main>
+        {firebaseError && (
+          <div className="firebase-error">
+            {firebaseError === 'read'
+              ? 'Impossible de lire les stats (Firestore inaccessible). Vérifiez les règles Firestore.'
+              : 'Impossible d\'enregistrer votre vote (Firestore inaccessible). Vérifiez les règles Firestore.'}
+          </div>
+        )}
         {view === 'leaderboard' ? (
           <Leaderboard currentPseudo={pseudo} />
         ) : showResults ? (
