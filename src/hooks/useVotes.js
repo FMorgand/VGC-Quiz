@@ -44,20 +44,16 @@ export function useVotes(today, pseudo) {
   async function submitVote(chosenIds) {
     if (hasPlayed || !pseudo) return
 
-    const projectedVotes = {}
-    if (votes) {
-      Object.entries(votes).forEach(([id, count]) => {
-        projectedVotes[Number(id)] = count
-      })
+    // votes = community data BEFORE this player's submission → clean comparison
+    const othersTotal = votes ? Object.values(votes).reduce((sum, n) => sum + n, 0) : 0
+    let alignmentScore = null
+    if (votes && othersTotal > 0) {
+      const top4 = Object.entries(votes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([id]) => Number(id))
+      alignmentScore = chosenIds.filter((id) => top4.includes(id)).length
     }
-    chosenIds.forEach((id) => {
-      projectedVotes[id] = (projectedVotes[id] ?? 0) + 1
-    })
-    const top4 = Object.entries(projectedVotes)
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 4)
-      .map(([id]) => Number(id))
-    const alignmentScore = chosenIds.filter((id) => top4.includes(id)).length
 
     try {
       const ref = doc(db, 'votes', today)
