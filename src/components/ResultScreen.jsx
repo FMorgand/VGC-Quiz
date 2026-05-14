@@ -8,16 +8,22 @@ export default function ResultScreen({ quiz, votes, totalPlayers, chosenIds }) {
     return 0.15 + (pct / 100) * 0.6
   }
 
-  // Top-4 zones by vote count
-  const top4 = votes
-    ? Object.entries(votes)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 4)
-        .map(([id]) => Number(id))
-    : []
-
-  const alignmentScore = chosenIds.filter((id) => top4.includes(id)).length
-  const alignmentLabel = ['😬 0/4', '😐 1/4', '🙂 2/4', '😎 3/4', '🎯 4/4'][alignmentScore] ?? '—'
+  // Exclude the player's own vote to compare against others only
+  const othersTotal = totalPlayers - 1
+  const alignmentLabel = (() => {
+    if (!votes || othersTotal <= 0) return '—'
+    const othersVotes = {}
+    Object.entries(votes).forEach(([id, count]) => {
+      const myContrib = chosenIds.includes(Number(id)) ? 1 : 0
+      othersVotes[id] = Math.max(0, count - myContrib)
+    })
+    const top4 = Object.entries(othersVotes)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([id]) => Number(id))
+    const score = chosenIds.filter((id) => top4.includes(id)).length
+    return ['😬 0/4', '😐 1/4', '🙂 2/4', '😎 3/4', '🎯 4/4'][score] ?? '—'
+  })()
 
   return (
     <div className="result-wrapper">

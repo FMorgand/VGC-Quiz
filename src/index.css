@@ -188,9 +188,14 @@ main {
   transition: background 0.15s, border-color 0.15s;
   padding: 0;
 }
-.zone:hover {
-  background: rgba(250, 204, 21, 0.2);
-  border-color: var(--accent);
+@media (hover: hover) {
+  .zone:hover {
+    background: rgba(250, 204, 21, 0.2);
+    border-color: var(--accent);
+  }
+}
+.zone:active {
+  background: rgba(250, 204, 21, 0.15);
 }
 .zone--selected {
   background: rgba(250, 204, 21, 0.35);
