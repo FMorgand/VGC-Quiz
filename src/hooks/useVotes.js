@@ -8,6 +8,7 @@ const CHOSEN_PREFIX = 'pokequiz_chosen_'
 export function useVotes(today, pseudo) {
   const [votes, setVotes] = useState(null)
   const [totalPlayers, setTotalPlayers] = useState(0)
+  const [compositions, setCompositions] = useState({})
   const [firebaseError, setFirebaseError] = useState(null)
   const [hasPlayed, setHasPlayed] = useState(
     () => !!localStorage.getItem(PLAYED_PREFIX + today)
@@ -28,6 +29,7 @@ export function useVotes(today, pseudo) {
           const data = snap.data()
           setVotes(data.zones ?? {})
           setTotalPlayers(data.total ?? 0)
+          setCompositions(data.compositions ?? {})
         } else {
           setVotes({})
           setTotalPlayers(0)
@@ -61,12 +63,14 @@ export function useVotes(today, pseudo) {
       // chosenIds is ordered: [lead1, lead2, back1, back2]
       const leads = chosenIds.slice(0, 2)
       const backs = chosenIds.slice(2, 4)
+      const compositionKey = chosenIds.join('_')
 
       // updateDoc handles dot-notation as nested field paths (setDoc merge does not)
       const updates = { total: increment(1) }
       chosenIds.forEach((id) => { updates[`zones.${id}`] = increment(1) })
       leads.forEach((id) => { updates[`leads.${id}`] = increment(1) })
       backs.forEach((id) => { updates[`backs.${id}`] = increment(1) })
+      updates[`compositions.${compositionKey}`] = increment(1)
 
       try {
         await updateDoc(ref, updates)
@@ -76,7 +80,13 @@ export function useVotes(today, pseudo) {
         chosenIds.forEach((id) => { zones[String(id)] = 1 })
         leads.forEach((id) => { leadsMap[String(id)] = 1 })
         backs.forEach((id) => { backsMap[String(id)] = 1 })
-        await setDoc(ref, { total: 1, zones, leads: leadsMap, backs: backsMap })
+        await setDoc(ref, {
+          total: 1,
+          zones,
+          leads: leadsMap,
+          backs: backsMap,
+          compositions: { [compositionKey]: 1 },
+        })
       }
 
       const playerRef = doc(db, 'players', pseudo)
@@ -111,5 +121,5 @@ export function useVotes(today, pseudo) {
     setHasPlayed(true)
   }
 
-  return { votes, totalPlayers, hasPlayed, savedChosenIds, firebaseError, submitVote }
+  return { votes, totalPlayers, compositions, hasPlayed, savedChosenIds, firebaseError, submitVote }
 }

@@ -11,7 +11,7 @@ import './index.css'
 export default function App() {
   const { pseudo, setPseudo } = usePlayer()
   const { today, quiz } = useQuiz()
-  const { votes, totalPlayers, hasPlayed, savedChosenIds, firebaseError, submitVote } = useVotes(today, pseudo)
+  const { votes, totalPlayers, compositions, hasPlayed, savedChosenIds, firebaseError, submitVote } = useVotes(today, pseudo)
   const [chosenIds, setChosenIds] = useState(null)
   const [view, setView] = useState('quiz') // 'quiz' | 'leaderboard'
 
@@ -74,6 +74,7 @@ export default function App() {
               quiz={quiz}
               votes={votes}
               totalPlayers={totalPlayers}
+              compositions={compositions}
               chosenIds={displayedChosenIds}
             />
             <div className="result-actions">

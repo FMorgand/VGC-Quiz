@@ -1,4 +1,6 @@
-export default function ResultScreen({ quiz, votes, totalPlayers, chosenIds }) {
+import TopTeams from './TopTeams'
+
+export default function ResultScreen({ quiz, votes, totalPlayers, compositions, chosenIds }) {
   // chosenIds is ordered: [lead1, lead2, back1, back2]
   const leads = chosenIds.slice(0, 2)
   const backs = chosenIds.slice(2, 4)
@@ -97,6 +99,8 @@ export default function ResultScreen({ quiz, votes, totalPlayers, chosenIds }) {
           })}
         </div>
       </div>
+
+      <TopTeams compositions={compositions} zones={quiz.zones} totalPlayers={totalPlayers} />
 
       <div className="result-stats">
         <div className="stat-card">

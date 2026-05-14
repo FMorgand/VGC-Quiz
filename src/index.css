@@ -430,6 +430,106 @@ main {
 .leaderboard th { color: var(--text-muted); font-weight: 500; }
 .leaderboard .row--me td { color: var(--accent); font-weight: 600; }
 
+/* ── Top Teams ─────────────────────────────────── */
+.top-teams {
+  width: 100%;
+  max-width: 720px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.top-teams-title {
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-muted);
+  margin: 0 0 4px;
+}
+
+.team-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.team-entry--top {
+  border-color: var(--accent);
+  background: rgba(250, 204, 21, 0.06);
+}
+
+.team-rank {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  width: 24px;
+  flex-shrink: 0;
+}
+.team-entry--top .team-rank { color: var(--accent); }
+
+.team-composition {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.team-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.team-role {
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  width: 28px;
+  flex-shrink: 0;
+}
+.team-role--lead { color: var(--accent); }
+.team-role--back { color: #818cf8; }
+
+.team-names {
+  font-size: 0.85rem;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.team-sep {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+}
+
+.team-stats {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.team-pct {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+.team-entry--top .team-pct { color: var(--accent); }
+
+.team-count {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
 /* ── Firebase error banner ─────────────────────── */
 .firebase-error {
   width: 100%;
