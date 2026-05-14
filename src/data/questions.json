@@ -1,0 +1,14 @@
+{
+  "2026-05-14": {
+    "question": "Quelles zones vont attirer le plus de regards selon vous ?",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png",
+    "zones": [
+      { "id": 1, "x": 2,  "y": 5,  "w": 30, "h": 45, "label": "Zone 1" },
+      { "id": 2, "x": 36, "y": 5,  "w": 28, "h": 45, "label": "Zone 2" },
+      { "id": 3, "x": 68, "y": 5,  "w": 30, "h": 45, "label": "Zone 3" },
+      { "id": 4, "x": 2,  "y": 55, "w": 30, "h": 40, "label": "Zone 4" },
+      { "id": 5, "x": 36, "y": 55, "w": 28, "h": 40, "label": "Zone 5" },
+      { "id": 6, "x": 68, "y": 55, "w": 30, "h": 40, "label": "Zone 6" }
+    ]
+  }
+}
