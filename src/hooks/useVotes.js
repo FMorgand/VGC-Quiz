@@ -3,6 +3,7 @@ import { doc, getDoc, setDoc, increment, onSnapshot } from 'firebase/firestore'
 import { db } from '../firebase'
 
 const PLAYED_PREFIX = 'pokequiz_played_'
+const CHOSEN_PREFIX = 'pokequiz_chosen_'
 
 export function useVotes(today, pseudo) {
   const [votes, setVotes] = useState(null)
@@ -10,8 +11,11 @@ export function useVotes(today, pseudo) {
   const [hasPlayed, setHasPlayed] = useState(
     () => !!localStorage.getItem(PLAYED_PREFIX + today)
   )
+  const [savedChosenIds, setSavedChosenIds] = useState(() => {
+    const raw = localStorage.getItem(CHOSEN_PREFIX + today)
+    return raw ? JSON.parse(raw) : null
+  })
 
-  // Listen to live vote updates for today
   useEffect(() => {
     if (!today) return
     const ref = doc(db, 'votes', today)
@@ -31,6 +35,22 @@ export function useVotes(today, pseudo) {
   async function submitVote(chosenIds) {
     if (hasPlayed || !pseudo) return
 
+    // Calculate alignment score against current votes + own vote
+    const projectedVotes = {}
+    if (votes) {
+      Object.entries(votes).forEach(([id, count]) => {
+        projectedVotes[Number(id)] = count
+      })
+    }
+    chosenIds.forEach((id) => {
+      projectedVotes[id] = (projectedVotes[id] ?? 0) + 1
+    })
+    const top4 = Object.entries(projectedVotes)
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, 4)
+      .map(([id]) => Number(id))
+    const alignmentScore = chosenIds.filter((id) => top4.includes(id)).length
+
     const ref = doc(db, 'votes', today)
     const updates = { total: increment(1) }
     chosenIds.forEach((id) => {
@@ -38,10 +58,11 @@ export function useVotes(today, pseudo) {
     })
     await setDoc(ref, updates, { merge: true })
 
-    // Track in player history
     const playerRef = doc(db, 'players', pseudo)
     const playerSnap = await getDoc(playerRef)
-    const playerData = playerSnap.exists() ? playerSnap.data() : { streak: 0, lastPlayed: null, history: [] }
+    const playerData = playerSnap.exists()
+      ? playerSnap.data()
+      : { streak: 0, lastPlayed: null, history: [] }
 
     const yesterday = new Date()
     yesterday.setDate(yesterday.getDate() - 1)
@@ -51,12 +72,17 @@ export function useVotes(today, pseudo) {
     await setDoc(playerRef, {
       streak: newStreak,
       lastPlayed: today,
-      history: [...(playerData.history ?? []), { date: today, chosen: chosenIds }],
+      history: [
+        ...(playerData.history ?? []),
+        { date: today, chosen: chosenIds, alignment: alignmentScore },
+      ],
     })
 
     localStorage.setItem(PLAYED_PREFIX + today, '1')
+    localStorage.setItem(CHOSEN_PREFIX + today, JSON.stringify(chosenIds))
+    setSavedChosenIds(chosenIds)
     setHasPlayed(true)
   }
 
-  return { votes, totalPlayers, hasPlayed, submitVote }
+  return { votes, totalPlayers, hasPlayed, savedChosenIds, submitVote }
 }

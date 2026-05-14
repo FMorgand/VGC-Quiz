@@ -4,10 +4,20 @@ export default function ResultScreen({ quiz, votes, totalPlayers, chosenIds }) {
     return Math.round(((votes[zoneId] ?? 0) / totalPlayers) * 100)
   }
 
-  // Opacity 0.15 (no votes) → 0.75 (100% votes)
   function heatOpacity(pct) {
     return 0.15 + (pct / 100) * 0.6
   }
+
+  // Top-4 zones by vote count
+  const top4 = votes
+    ? Object.entries(votes)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 4)
+        .map(([id]) => Number(id))
+    : []
+
+  const alignmentScore = chosenIds.filter((id) => top4.includes(id)).length
+  const alignmentLabel = ['😬 0/4', '😐 1/4', '🙂 2/4', '😎 3/4', '🎯 4/4'][alignmentScore] ?? '—'
 
   return (
     <div className="result-wrapper">
@@ -39,9 +49,18 @@ export default function ResultScreen({ quiz, votes, totalPlayers, chosenIds }) {
         })}
       </div>
 
+      <div className="result-stats">
+        <div className="stat-card">
+          <span className="stat-label">Alignement</span>
+          <span className="stat-value">{alignmentLabel}</span>
+        </div>
+        <div className="stat-card">
+          <span className="stat-label">Joueurs aujourd'hui</span>
+          <span className="stat-value">{totalPlayers}</span>
+        </div>
+      </div>
+
       <p className="result-meta">
-        {totalPlayers} joueur{totalPlayers > 1 ? 's' : ''} ont voté aujourd'hui.
-        <br />
         <span className="legend legend--chosen">■ Votre choix</span>
         {'  '}
         <span className="legend legend--other">■ Autre zone</span>
