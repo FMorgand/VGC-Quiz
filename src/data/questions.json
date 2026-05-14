@@ -3,12 +3,12 @@
     "question": "Choose your team of 4",
     "imageUrl": "/images/2026-05-14.jpg",
     "zones": [
-      { "id": 1, "x": 0, "y": 10, "w": 20, "h": 15, "label": "Corviknight" },
-      { "id": 2, "x": 0, "y": 25, "w": 20, "h": 15, "label": "Primarina" },
-      { "id": 3, "x": 0, "y": 40, "w": 20, "h": 15, "label": "Garchomp" },
-      { "id": 4, "x": 0, "y": 55, "w": 20, "h": 15, "label": "Basculegion" },
-      { "id": 5, "x": 0, "y": 70, "w": 20, "h": 13, "label": "Kingambit" },
-      { "id": 6, "x": 0, "y": 83, "w": 20, "h": 12, "label": "Gengar" }
+      { "id": 1, "x": 0, "y": 12, "w": 32, "h": 12, "label": "Corviknight" },
+      { "id": 2, "x": 0, "y": 24, "w": 32, "h": 12, "label": "Primarina" },
+      { "id": 3, "x": 0, "y": 36, "w": 32, "h": 12, "label": "Garchomp" },
+      { "id": 4, "x": 0, "y": 48, "w": 32, "h": 12, "label": "Basculegion" },
+      { "id": 5, "x": 0, "y": 60, "w": 32, "h": 12, "label": "Kingambit" },
+      { "id": 6, "x": 0, "y": 72, "w": 32, "h": 12, "label": "Gengar" }
     ]
   }
 }
