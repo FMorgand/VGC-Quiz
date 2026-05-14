@@ -58,18 +58,25 @@ export function useVotes(today, pseudo) {
     try {
       const ref = doc(db, 'votes', today)
 
+      // chosenIds is ordered: [lead1, lead2, back1, back2]
+      const leads = chosenIds.slice(0, 2)
+      const backs = chosenIds.slice(2, 4)
+
       // updateDoc handles dot-notation as nested field paths (setDoc merge does not)
       const updates = { total: increment(1) }
-      chosenIds.forEach((id) => {
-        updates[`zones.${id}`] = increment(1)
-      })
+      chosenIds.forEach((id) => { updates[`zones.${id}`] = increment(1) })
+      leads.forEach((id) => { updates[`leads.${id}`] = increment(1) })
+      backs.forEach((id) => { updates[`backs.${id}`] = increment(1) })
+
       try {
         await updateDoc(ref, updates)
       } catch {
         // Document doesn't exist yet — create it with proper nested structure
-        const zones = {}
+        const zones = {}, leadsMap = {}, backsMap = {}
         chosenIds.forEach((id) => { zones[String(id)] = 1 })
-        await setDoc(ref, { total: 1, zones })
+        leads.forEach((id) => { leadsMap[String(id)] = 1 })
+        backs.forEach((id) => { backsMap[String(id)] = 1 })
+        await setDoc(ref, { total: 1, zones, leads: leadsMap, backs: backsMap })
       }
 
       const playerRef = doc(db, 'players', pseudo)
