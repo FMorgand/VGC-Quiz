@@ -63,7 +63,11 @@ export function useVotes(today, pseudo) {
       // chosenIds is ordered: [lead1, lead2, back1, back2]
       const leads = chosenIds.slice(0, 2)
       const backs = chosenIds.slice(2, 4)
-      const compositionKey = chosenIds.join('_')
+      // Sort within each group so lead order and back order don't create duplicate keys
+      const compositionKey = [
+        ...[...leads].sort((a, b) => a - b),
+        ...[...backs].sort((a, b) => a - b),
+      ].join('_')
 
       // updateDoc handles dot-notation as nested field paths (setDoc merge does not)
       const updates = { total: increment(1) }
