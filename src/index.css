@@ -66,6 +66,48 @@ body { margin: 0; }
   border-radius: 999px;
 }
 
+/* ── Date navigation ───────────────────────────── */
+.date-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.date-nav-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s;
+}
+.date-nav-btn:hover:not(:disabled) { background: var(--border); }
+.date-nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+.date-nav-label {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  min-width: 160px;
+  text-align: center;
+}
+
+.past-notice {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  text-align: center;
+  margin: 0;
+}
+
 main {
   flex: 1;
   display: flex;
